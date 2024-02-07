@@ -14,7 +14,8 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-testing_mode = True
+
+testing_mode = False #texting mode allows me to check that generate_urls() and
 
 def generate_urls():
     """Creates list of URLs representing the pages listing street names on LSI.url_list returned."""
@@ -56,6 +57,7 @@ def scrape_names(url_list):
     return name_list
 
 def clean_name(name):
+    """Cleans string: converts name to lowercase, removes the area code, and changes 'st ' to 'st.' if at beginning of string."""
     name = name.lower()
     name = re.sub('( \([a-z0-9]+\))','',name) #remove area code
 
@@ -66,10 +68,16 @@ def clean_name(name):
     return name
 
 
-def  write_txt_file(name_list):
-    return 0
+def write_txt_file(name_list):
+    """Writes each name in name_list into a text file."""
+    with open('lsn.txt', 'w+') as file:
+        for name in name_list:
+            name += '\n'
+            file.write(name)
+        file.close()
+
 
 if __name__ == "__main__":
     url_list = generate_urls()
     name_list = scrape_names(url_list)
-
+    write_txt_file(name_list)
